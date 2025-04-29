@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e          # Exit on any error
+set -o pipefail # Catch errors in piped commands
+
+# Path to config.yaml
+CONFIG_FILE="config.yaml"
+
+# Extract AWS profile and region settings from config.yaml via environment variables
+PROFILE=$(yq eval '.preferences_and_settings.default_profile // "default"' "$CONFIG_FILE")
+REGION=$(yq eval '.preferences_and_settings.default_region // "us-east-1"' "$CONFIG_FILE")
+
+if [ -z "$PROFILE" ] || [ -z "$REGION" ]; then
+  echo "PROFILE or REGION not set in config.yaml. Please verify the configuration."
+  exit 1
+fi
+
+# The settings below can't be updated through the `cli or ``cloud `formation as there are no aws billing command
+
+exit
+
+# Update contact information
+aws billing update-billing-account-contact \
+  --account-contact-name "$BILLING_CONTACT_NAME" \
+  --account-contact-phone-number "$BILLING_CONTACT_PHONE" \
+  --account-contact-email "$BILLING_CONTACT_EMAIL" \
+  --region "$REGION" --profile "$PROFILE"
+
+# Update default currency
+aws billing update-account-preferences \
+  --default-currency "$DEFAULT_CURRENCY" \
+  --region "$REGION" --profile "$PROFILE"

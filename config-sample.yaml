@@ -1,0 +1,129 @@
+account:
+  account_details:
+    name: Root
+    alias: mycompany
+    contact_information:
+      full_name: John Doe
+      company_name: MyCompany
+      website_url: https://www.mycompany.com
+      phone_number: "+27123456789"
+      address:
+        line1: Address Line 1
+        line2: Address Line 2
+        line3: Suburb
+        city: CityName
+        state: StateName
+        postal_code: "12345"
+        country: ZA
+        phone_number: "+27123456789"
+  alternate_contacts:
+    billing:
+      full_name: Billing Person
+      title: CFO
+      email: billing@mycompany.com
+      phone_number: "+27123456780"
+    operations:
+      full_name: Ops Person
+      title: COO
+      email: infrastructure@mycompany.com
+      phone_number: "+27123456781"
+    security:
+      full_name: Security Person
+      title: CISO
+      email: security@mycompany.com
+      phone_number: "+27123456782"
+  iam_user_access: true
+
+preferences_and_settings:
+  default_profile: cloudformation
+  default_region: us-east-1
+  default_language: en
+  default_time_zone: Africa/Johannesburg
+
+  payment_preferences:
+    address:
+      full_name: Payment Person
+      company_name: MyCompany
+      country: ZA
+      line1: Address Line 1
+      line2: Suburb
+      city: CityName
+      state: StateName
+      postal_code: "12345"
+      phone_number: "+27123456789"
+      email_1: billing@mycompany.com
+      email_2: 
+      email_3: 
+    payment_currency: ZAR
+
+  billing_preferences:
+    invoice_delivery_preferences:
+      pdf_invoice_delivery_method: email
+    alert_preferences:
+      aws_free_tier_alerts:
+        enabled: true
+        email_address: billing@mycompany.com
+      receive_cloudwatch_billing_alerts: true
+
+  security_preferences:
+    account_details:
+      account_name: mycompany
+      email: security@mycompany.com
+    account_settings:
+      password_policy:
+        minimum_password_length: 32
+        require_symbols: true
+        require_numbers: true
+        require_uppercase_characters: true
+        require_lowercase_characters: true
+        password_expiration: false
+        max_password_age: 90
+        expiration_requires_admin_reset: false
+        allow_users_to_change_password: true
+        password_reuse_prevention: false
+        remember_passwords: 24
+
+  monthly_budget_amount: 10
+
+organizational_units:
+  - Sandbox: {}
+  - Workloads:
+      dev:
+        account_name: DEV
+        account_email: infrastructure+dev@mycompany.com
+      prd:
+        account_name: PRD
+        account_email: infrastructure+prd@mycompany.com
+      qa:
+        account_name: QA
+        account_email: infrastructure+qa@mycompany.com
+      shd:
+        account_name: SHD
+        account_email: infrastructure+shd@mycompany.com
+
+iam:
+  cloudformation_user:
+    user_name: cloudformation
+    group_name: infrastructure
+  groups:
+    admin: admin
+    readonly: readonly
+    developers: developers
+    billing: billing
+  permission_sets:
+    administrator_access: AdministratorAccess
+    power_user_access: PowerUserAccess
+    read_only_access: ReadOnlyAccess
+    billing_access: Billing
+
+scp:
+  deny_non_approved_regions:
+    name: "DenyNonApprovedRegions"
+    description: "Deny actions outside approved regions"
+    approved_regions:
+      - "us-east-1"
+      - "eu-west-1"
+
+  force_mfa_usage:
+    name: "ForceMFAUsage"
+    description: "Force users to authenticate with MFA"

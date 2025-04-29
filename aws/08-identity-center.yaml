@@ -1,0 +1,307 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Setup AWS Identity Center Permission Sets and Groups
+
+Parameters:
+  AccountId:
+    Type: String
+    Description: AWS Account ID for SSO assignments
+  AccountIdDEV:
+    Type: String
+    Description: AWS DEV Account ID for SSO assignments
+  AccountIdPRD:
+    Type: String
+    Description: AWS PRD Account ID for SSO assignments
+  AccountIdQA:
+    Type: String
+    Description: AWS QA Account ID for SSO assignments
+  AccountIdSHD:
+    Type: String
+    Description: AWS SHD Account ID for SSO assignments
+  IdentityStoreId:
+    Type: String
+    Description: Identity Store ID for AWS SSO
+  InstanceArn:
+    Type: String
+    Description: AWS SSO Instance ARN
+
+  # Permission Set Names
+  AdministratorAccessPermissionSetName:
+    Type: String
+    Description: Name of AdministratorAccess permission set
+  PowerUserAccessPermissionSetName:
+    Type: String
+    Description: Name of PowerUserAccess permission set
+  BillingAccessPermissionSetName:
+    Type: String
+    Description: Name of Billing permission set
+  ReadOnlyAccessPermissionSetName:
+    Type: String
+    Description: Name of ReadOnlyAccess permission set
+
+  # Group Names
+  AdminGroupName:
+    Type: String
+    Description: Display name for Admin group
+  DeveloperGroupName:
+    Type: String
+    Description: Display name for Developer group
+  BillingGroupName:
+    Type: String
+    Description: Display name for Billing group
+  ReadOnlyGroupName:
+    Type: String
+    Description: Display name for Readonly group
+
+Resources:
+  # Permission Sets
+  AdministratorAccessPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: !Ref AdministratorAccessPermissionSetName
+      Description: Full access
+      InstanceArn: !Ref InstanceArn
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  PowerUserAccessPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: !Ref PowerUserAccessPermissionSetName
+      Description: Power users
+      InstanceArn: !Ref InstanceArn
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/PowerUserAccess
+
+  BillingPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: !Ref BillingAccessPermissionSetName
+      Description: Billing access
+      InstanceArn: !Ref InstanceArn
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/job-function/Billing
+
+  ReadOnlyAccessPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: !Ref ReadOnlyAccessPermissionSetName
+      Description: Read-only access
+      InstanceArn: !Ref InstanceArn
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+
+  # Groups
+  AdminGroup:
+    Type: AWS::IdentityStore::Group
+    Properties:
+      IdentityStoreId: !Ref IdentityStoreId
+      DisplayName: !Ref AdminGroupName
+
+  DeveloperGroup:
+    Type: AWS::IdentityStore::Group
+    Properties:
+      IdentityStoreId: !Ref IdentityStoreId
+      DisplayName: !Ref DeveloperGroupName
+
+  BillingGroup:
+    Type: AWS::IdentityStore::Group
+    Properties:
+      IdentityStoreId: !Ref IdentityStoreId
+      DisplayName: !Ref BillingGroupName
+
+  ReadOnlyGroup:
+    Type: AWS::IdentityStore::Group
+    Properties:
+      IdentityStoreId: !Ref IdentityStoreId
+      DisplayName: !Ref ReadOnlyGroupName
+
+  # Assignments
+  AdminAssignment:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountId
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  AdminAssignmentDEV:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdDEV
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  AdminAssignmentDEV:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdDEV
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  AdminAssignmentPRD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdPRD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  AdminAssignmentQA:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdQA
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  AdminAssignmentSHD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdSHD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt AdminGroup.GroupId
+      PermissionSetArn: !GetAtt AdministratorAccessPermissionSet.PermissionSetArn
+
+  DeveloperAssignmentDEV:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdDEV
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt DeveloperGroup.GroupId
+      PermissionSetArn: !GetAtt PowerUserAccessPermissionSet.PermissionSetArn
+
+  DeveloperAssignmentPRD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdPRD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt DeveloperGroup.GroupId
+      PermissionSetArn: !GetAtt PowerUserAccessPermissionSet.PermissionSetArn
+
+  DeveloperAssignmentQA:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdQA
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt DeveloperGroup.GroupId
+      PermissionSetArn: !GetAtt PowerUserAccessPermissionSet.PermissionSetArn
+
+  DeveloperAssignmentSHD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdSHD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt DeveloperGroup.GroupId
+      PermissionSetArn: !GetAtt PowerUserAccessPermissionSet.PermissionSetArn
+
+  BillingAssignmentRoot:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountId
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt BillingGroup.GroupId
+      PermissionSetArn: !GetAtt BillingPermissionSet.PermissionSetArn
+
+  BillingAssignmentDEV:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdDEV
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt BillingGroup.GroupId
+      PermissionSetArn: !GetAtt BillingPermissionSet.PermissionSetArn
+
+  BillingAssignmentPRD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdPRD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt BillingGroup.GroupId
+      PermissionSetArn: !GetAtt BillingPermissionSet.PermissionSetArn
+
+  BillingAssignmentQA:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdQA
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt BillingGroup.GroupId
+      PermissionSetArn: !GetAtt BillingPermissionSet.PermissionSetArn
+
+  BillingAssignmentSHD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdSHD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt BillingGroup.GroupId
+      PermissionSetArn: !GetAtt BillingPermissionSet.PermissionSetArn
+
+  ReadOnlyAssignmentDEV:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdDEV
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt ReadOnlyGroup.GroupId
+      PermissionSetArn: !GetAtt ReadOnlyAccessPermissionSet.PermissionSetArn
+
+  ReadOnlyAssignmentPRD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdPRD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt ReadOnlyGroup.GroupId
+      PermissionSetArn: !GetAtt ReadOnlyAccessPermissionSet.PermissionSetArn
+
+  ReadOnlyAssignmentQA:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdQA
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt ReadOnlyGroup.GroupId
+      PermissionSetArn: !GetAtt ReadOnlyAccessPermissionSet.PermissionSetArn
+
+  ReadOnlyAssignmentSHD:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      TargetId: !Ref AccountIdSHD
+      TargetType: AWS_ACCOUNT
+      PrincipalType: GROUP
+      PrincipalId: !GetAtt ReadOnlyGroup.GroupId
+      PermissionSetArn: !GetAtt ReadOnlyAccessPermissionSet.PermissionSetArn

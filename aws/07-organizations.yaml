@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create AWS Organization structure with OUs and accounts
+
+Parameters:
+  DevAccountEmail:
+    Type: String
+    Description: Email for DEV account
+  PrdAccountEmail:
+    Type: String
+    Description: Email for PRD account
+  QaAccountEmail:
+    Type: String
+    Description: Email for QA account
+  ShdAccountEmail:
+    Type: String
+    Description: Email for SHD account
+
+Resources:
+  OrganizationRoot:
+    Type: AWS::Organizations::Organization
+    Properties:
+      FeatureSet: ALL
+
+  SandboxOU:
+    Type: AWS::Organizations::OrganizationalUnit
+    Properties:
+      Name: Sandbox
+      ParentId: !GetAtt OrganizationRoot.RootId
+
+  WorkloadsOU:
+    Type: AWS::Organizations::OrganizationalUnit
+    Properties:
+      Name: Workloads
+      ParentId: !GetAtt OrganizationRoot.RootId
+
+  DevAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: DEV
+      Email: !Ref DevAccountEmail
+      ParentIds:
+        - !Ref WorkloadsOU
+      RoleName: OrganizationAccountAccessRole
+
+  PrdAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: PRD
+      Email: !Ref PrdAccountEmail
+      ParentIds:
+        - !Ref WorkloadsOU
+      RoleName: OrganizationAccountAccessRole
+
+  QaAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: QA
+      Email: !Ref QaAccountEmail
+      ParentIds:
+        - !Ref WorkloadsOU
+      RoleName: OrganizationAccountAccessRole
+
+  ShdAccount:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: SHD
+      Email: !Ref ShdAccountEmail
+      ParentIds:
+        - !Ref WorkloadsOU
+      RoleName: OrganizationAccountAccessRole
+

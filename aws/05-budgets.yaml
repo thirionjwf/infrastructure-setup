@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Setup zero spend and monthly spend budget
+
+Parameters:
+  MonthlyBudgetAmount:
+    Type: Number
+    Description: Monthly budget amount in USD
+
+Resources:
+  ZeroSpendBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: Zero-Spend-Budget
+        BudgetLimit:
+          Amount: 0.01
+          Unit: USD
+        BudgetType: COST
+        TimeUnit: MONTHLY
+
+  MonthlySpendBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: Monthly-Spend-Budget
+        BudgetLimit:
+          Amount: !Ref MonthlyBudgetAmount
+          Unit: USD
+        BudgetType: COST
+        TimeUnit: MONTHLY
+

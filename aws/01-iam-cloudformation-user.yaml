@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create IAM user 'cloudformation' with AdministratorAccess and output the access credentials
+
+Parameters:
+  IAMUserName:
+    Type: String
+    Description: The IAM user name for CloudFormation automation
+    Default: cloudformation
+  IAMGroupName:
+    Type: String
+    Description: The IAM group name for CloudFormation automation
+    Default: infrastructure
+
+Resources:
+  ## 1. Create Group
+  InfrastructureGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Ref IAMGroupName
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  ## 2. Create IAM User
+  CloudFormationUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref IAMUserName
+      Groups:
+        - !Ref InfrastructureGroup
+      Tags:
+        - Key: Purpose
+          Value: CloudFormation Automation
+
+  ## 3. Create Access Key for the User
+  CloudFormationAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref CloudFormationUser
+
+Outputs:
+  AccessKeyId:
+    Description: "Access key for CloudFormation automation"
+    Value: !Ref CloudFormationAccessKey
+
+  SecretAccessKey:
+    Description: "Secret access key for CloudFormation automation"
+    Value: !GetAtt CloudFormationAccessKey.SecretAccessKey

@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Service Control Policies (SCPs) for AWS Organizations
+
+Parameters:
+  ApprovedRegions:
+    Type: CommaDelimitedList
+    Description: List of AWS regions where operations are allowed
+
+  DenyRegionsPolicyName:
+    Type: String
+    Default: DenyNonApprovedRegions
+    Description: Name for the Deny Regions SCP
+
+  DenyRegionsPolicyDescription:
+    Type: String
+    Default: Deny actions outside approved regions
+    Description: Description for the Deny Regions SCP
+
+  ForceMFAUsagePolicyName:
+    Type: String
+    Default: ForceMFAUsage
+    Description: Name for the Force MFA SCP
+
+  ForceMFAUsagePolicyDescription:
+    Type: String
+    Default: Force users to authenticate with MFA
+    Description: Description for the Force MFA SCP
+
+Resources:
+  DenyNonApprovedRegionsPolicy:
+    Type: AWS::Organizations::Policy
+    Properties:
+      Name: !Ref DenyRegionsPolicyName
+      Description: !Ref DenyRegionsPolicyDescription
+      Type: SERVICE_CONTROL_POLICY
+      Content:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Action: "*"
+            Resource: "*"
+            Condition:
+              StringNotEquals:
+                aws:RequestedRegion: !Ref ApprovedRegions
+
+  ForceMFAUsagePolicy:
+    Type: AWS::Organizations::Policy
+    Properties:
+      Name: !Ref ForceMFAUsagePolicyName
+      Description: !Ref ForceMFAUsagePolicyDescription
+      Type: SERVICE_CONTROL_POLICY
+      Content:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Action: "*"
+            Resource: "*"
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: "false"
+
+Outputs:
+  DenyNonApprovedRegionsPolicyId:
+    Description: ID of the DenyNonApprovedRegions SCP
+    Value: !Ref DenyNonApprovedRegionsPolicy
+    Export:
+      Name: DenyNonApprovedRegionsPolicyId
+
+  ForceMFAUsagePolicyId:
+    Description: ID of the ForceMFAUsage SCP
+    Value: !Ref ForceMFAUsagePolicy
+    Export:
+      Name: ForceMFAUsagePolicyId
