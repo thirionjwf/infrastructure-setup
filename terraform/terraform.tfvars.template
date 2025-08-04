@@ -1,0 +1,88 @@
+aws_profile               = "company"
+aws_region                = "eu-west-1"
+account_alias             = "company"
+tf_state_s3_bucket        = "terraform-state-xxxxxxxx"
+tf_locks_dynamodb_table   = "terraform-locks"
+
+billing_contact = {
+  email        = "user@company.com"
+  full_name    = "Name Surname"
+  title        = "Title"
+  phone_number = "+11234567890"
+}
+operations_contact = {
+  email        = "user@company.com"
+  full_name    = "Name Surname"
+  title        = "Title"
+  phone_number = "+11234567890"
+}
+security_contact = {
+  email        = "user@company.com"
+  full_name    = "Name Surname"
+  title        = "Title"
+  phone_number = "+11234567890"
+}
+
+minimum_password_length           = 16
+max_password_age                  = 30
+password_reuse_prevention         = 3
+require_uppercase_characters      = true
+require_lowercase_characters      = true
+require_symbols                   = true
+require_numbers                   = true
+allow_users_to_change_password    = true
+monthly_budget_amount             = 10
+budget_alert_emails               = ["user1@company.com", user2@company.com"]
+
+organisation = [
+  {
+    ou_name = "Security"
+    ou_accounts = [
+      {
+        account_name  = "Audit"
+        account_email = "infrastructure+audit@company.com"
+        account_id    = "555555555555"
+      },
+      {
+        account_name  = "Log Archive"
+        account_email = "infrastructure+log@company.com"
+        account_id    = "666666666666"
+      }
+    ]
+  },
+  {
+    ou_name     = "Sandbox"
+    ou_accounts = []
+  },
+  {
+    ou_name = "Workloads"
+    ou_accounts = [
+      {
+        account_name  = "DEV"
+        account_email = "infrastructure+dev@company.com"
+        account_id    = "111111111111"
+      },
+      {
+        account_name  = "QA"
+        account_email = "infrastructure+qa@company.com"
+        account_id    = "222222222222"
+      },
+      {
+        account_name  = "PRD"
+        account_email = "infrastructure+prd@company.com"
+        account_id    = "333333333333"
+      }
+    ]
+  },
+  {
+    ou_name = "Shared"
+    ou_accounts = [
+      {
+        account_name  = "Shared Services"
+        account_email = "infrastructure+shd@company.com"
+        account_id    = "444444444444"
+      }
+    ]
+  }
+]
+

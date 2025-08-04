@@ -1,0 +1,13 @@
+╷
+│ Error: creating account alias with name 'santamltd': operation error IAM: CreateAccountAlias, https response error StatusCode: 409, RequestID: 5b2ce312-bb3f-4a24-bc39-cfa78ecb5b34, EntityAlreadyExists: The account alias santamltd already exists.
+│
+│   with module.account_config.aws_iam_account_alias.alias,
+│   on modules\account\main.tf line 1, in resource "aws_iam_account_alias" "alias":
+│    1: resource "aws_iam_account_alias" "alias" {
+│
+╵
+
+terraform import module.account_config.aws_iam_account_alias.alias santamltd
+terraform import 'module.organisations.aws_organizations_account.account["Workloads-DEV"]' 112497038419
+terraform import "module.organisations.aws_organizations_account.account[`"Workloads-DEV`"]" 112497038419
+

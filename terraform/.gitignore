@@ -1,0 +1,6 @@
+.env
+.terraform.lock.hcl
+.terraform/
+backend.tf
+bucket-policy.json
+terraform.tfvars
